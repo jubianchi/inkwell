@@ -2,7 +2,7 @@ use llvm_sys::core::LLVMGetTypeKind;
 use llvm_sys::LLVMTypeKind;
 use llvm_sys::prelude::LLVMTypeRef;
 
-use crate::types::{IntType, VoidType, FunctionType, PointerType, VectorType, ArrayType, StructType, FloatType};
+use crate::types::{IntType, VoidType, FunctionType, PointerType, VectorType, ArrayType, StructType, FloatType, MetadataType};
 use crate::types::traits::AsTypeRef;
 use crate::values::{BasicValue, BasicValueEnum, IntValue};
 
@@ -80,6 +80,8 @@ enum_type_set! {
         FloatType,
         /// An integer type.
         IntType,
+        /// A metadata type.
+        MetadataType,
         /// A pointer type.
         PointerType,
         /// A contiguous heterogeneous container type.
@@ -290,7 +292,7 @@ impl<'ctx> BasicTypeEnum<'ctx> {
             LLVMTypeKind::LLVMVectorTypeKind => BasicTypeEnum::VectorType(VectorType::new(type_)),
             #[cfg(feature= "llvm11-0")]
             LLVMTypeKind::LLVMScalableVectorTypeKind => BasicTypeEnum::VectorType(VectorType::new(type_)),
-            LLVMTypeKind::LLVMMetadataTypeKind => unreachable!("Unsupported basic type: Metadata"),
+            LLVMTypeKind::LLVMMetadataTypeKind => BasicTypeEnum::MetadataType(MetadataType::new(type_)),
             LLVMTypeKind::LLVMX86_MMXTypeKind => unreachable!("Unsupported basic type: MMX"),
             LLVMTypeKind::LLVMLabelTypeKind => unreachable!("Unsupported basic type: Label"),
             LLVMTypeKind::LLVMVoidTypeKind => unreachable!("Unsupported basic type: VoidType"),
@@ -415,6 +417,7 @@ impl<'ctx> BasicTypeEnum<'ctx> {
             BasicTypeEnum::PointerType(ty) => ty.const_zero().as_basic_value_enum(),
             BasicTypeEnum::StructType(ty) => ty.const_zero().as_basic_value_enum(),
             BasicTypeEnum::VectorType(ty) => ty.const_zero().as_basic_value_enum(),
+            BasicTypeEnum::MetadataType(ty) => ty.const_zero().as_basic_value_enum(),
         }
     }
 }

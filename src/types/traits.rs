@@ -3,7 +3,7 @@ use llvm_sys::prelude::LLVMTypeRef;
 use std::fmt::Debug;
 
 use crate::AddressSpace;
-use crate::types::{IntType, FunctionType, FloatType, PointerType, StructType, ArrayType, VectorType, VoidType, Type};
+use crate::types::{IntType, FunctionType, FloatType, PointerType, StructType, ArrayType, VectorType, VoidType, Type, MetadataType};
 use crate::types::enums::{AnyTypeEnum, BasicTypeEnum};
 use crate::values::{IntMathValue, FloatMathValue, PointerMathValue, IntValue, FloatValue, PointerValue, VectorValue};
 use crate::support::LLVMString;
@@ -158,8 +158,8 @@ pub trait PointerMathType<'ctx>: BasicType<'ctx> {
     type PtrConvType: IntMathType<'ctx>;
 }
 
-trait_type_set! {AnyType: AnyTypeEnum, BasicTypeEnum, IntType, FunctionType, FloatType, PointerType, StructType, ArrayType, VoidType, VectorType}
-trait_type_set! {BasicType: BasicTypeEnum, IntType, FloatType, PointerType, StructType, ArrayType, VectorType}
+trait_type_set! {AnyType: AnyTypeEnum, BasicTypeEnum, IntType, FunctionType, FloatType, PointerType, StructType, ArrayType, VoidType, VectorType, MetadataType}
+trait_type_set! {BasicType: BasicTypeEnum, IntType, FloatType, PointerType, StructType, ArrayType, VectorType, MetadataType}
 
 impl<'ctx> IntMathType<'ctx> for IntType<'ctx> {
     type ValueType = IntValue<'ctx>;

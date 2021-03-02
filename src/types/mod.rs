@@ -10,6 +10,8 @@ mod fn_type;
 #[deny(missing_docs)]
 mod int_type;
 #[deny(missing_docs)]
+mod metadata_type;
+#[deny(missing_docs)]
 mod ptr_type;
 #[deny(missing_docs)]
 mod struct_type;
@@ -25,6 +27,7 @@ pub use crate::types::enums::{AnyTypeEnum, BasicTypeEnum};
 pub use crate::types::float_type::FloatType;
 pub use crate::types::fn_type::FunctionType;
 pub use crate::types::int_type::{IntType, StringRadix};
+pub use crate::types::metadata_type::MetadataType;
 pub use crate::types::ptr_type::PointerType;
 pub use crate::types::struct_type::StructType;
 pub use crate::types::traits::{AnyType, BasicType, IntMathType, FloatMathType, PointerMathType};

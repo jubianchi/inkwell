@@ -3,6 +3,7 @@ use inkwell::context::Context;
 use inkwell::values::BasicValue;
 
 use std::ptr::null;
+use inkwell::types::BasicType;
 
 #[test]
 fn test_build_call() {
@@ -59,6 +60,39 @@ fn test_build_call() {
 
     builder.build_call(load, &[], "call");
     builder.build_return(None);
+
+    assert!(module.verify().is_ok());
+}
+
+#[test]
+fn test_build_call_with_metadata() {
+    let context = Context::create();
+    let module = context.create_module("sum");
+    let builder = context.create_builder();
+
+    let f32_type = context.f32_type();
+    let md_type = context.metadata_type();
+
+    let fn_type = f32_type.fn_type(&[
+        f32_type.as_basic_type_enum(),
+        f32_type.as_basic_type_enum(),
+        md_type.as_basic_type_enum(),
+        md_type.as_basic_type_enum()
+    ], false);
+    let function = module.add_function("@llvm.experimental.constrained.fadd", fn_type, None);
+
+    let basic_block = context.append_basic_block(function, "entry");
+    builder.position_at_end(basic_block);
+
+    builder.build_call(function, &[
+        f32_type.const_float(1.0).as_basic_value_enum(),
+        f32_type.const_float(2.0).as_basic_value_enum(),
+        context.metadata_string("foo").as_basic_value_enum(),
+        context.metadata_string("bar").as_basic_value_enum(),
+    ], "call");
+    builder.build_return(Some(&f32_type.const_float(1.0).as_basic_value_enum()));
+
+    dbg!(module.verify());
 
     assert!(module.verify().is_ok());
 }

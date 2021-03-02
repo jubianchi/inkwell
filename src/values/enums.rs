@@ -62,7 +62,7 @@ macro_rules! enum_value_set {
 
 enum_value_set! {AggregateValueEnum: ArrayValue, StructValue}
 enum_value_set! {AnyValueEnum: ArrayValue, IntValue, FloatValue, PhiValue, FunctionValue, PointerValue, StructValue, VectorValue, InstructionValue}
-enum_value_set! {BasicValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, VectorValue}
+enum_value_set! {BasicValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, VectorValue, MetadataValue}
 enum_value_set! {BasicMetadataValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, VectorValue, MetadataValue}
 
 impl<'ctx> AnyValueEnum<'ctx> {
@@ -266,6 +266,7 @@ impl<'ctx> BasicValueEnum<'ctx> {
             LLVMTypeKind::LLVMPointerTypeKind => BasicValueEnum::PointerValue(PointerValue::new(value)),
             LLVMTypeKind::LLVMArrayTypeKind => BasicValueEnum::ArrayValue(ArrayValue::new(value)),
             LLVMTypeKind::LLVMVectorTypeKind => BasicValueEnum::VectorValue(VectorValue::new(value)),
+            LLVMTypeKind::LLVMMetadataTypeKind => BasicValueEnum::MetadataValue(MetadataValue::new(value)),
             _ => unreachable!("The given type is not a basic type."),
         }
     }
